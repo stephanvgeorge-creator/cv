@@ -254,8 +254,8 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
       <p class="small-muted">Choose how you'd like to get in touch</p>
 
       <div class="modal-actions">
-        <button class="btn call" id="callBtn" aria-label="Call Stephan">📞 Call Stephan — 07983 669900</button>
-        <button class="btn email" id="emailBtn" aria-label="Email Stephan">📧 Email Stephan — stephanvgeorge@gmail.com</button>
+        <button class="btn call" id="callBtn" aria-label="Call Stephan" href="tel:07983669900">📞 Call Stephan — 07983 669900</button>
+        <button class="btn email" id="emailBtn" aria-label="Email Stephan" href:"mailto:stephanvgeorge@gmail.com">📧 Email Stephan — stephanvgeorge@gmail.com</button>
         <button class="btn vcf" id="vcfBtn" aria-label="Download vCard">📇 Download Contact (VCF)</button>
         <button class="btn close" id="closeBtn" aria-label="Close contact dialog">Close</button>
       </div>
@@ -316,7 +316,36 @@ modal.addEventListener('click', (e) => {
     modal.classList.remove('open');
   }
 });
+// Button calling, emailing
+document.getElementById('callBtn').addEventListener('click', () => {
+  window.location.href = 'tel:07983669900';
+});
 
+document.getElementById('emailBtn').addEventListener('click', () => {
+  window.location.href = 'mailto:stephanvgeorge@gmail.com';
+});
+// create vcf
+document.getElementById('vcfBtn').addEventListener('click', () => {
+  const vcfData = `
+BEGIN:VCARD
+VERSION:3.0
+FN:Stephan George
+TEL;TYPE=CELL:07983669900
+EMAIL:stephanvgeorge@gmail.com
+END:VCARD
+  `.trim();
+
+  const blob = new Blob([vcfData], { type: 'text/vcard' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'stephan-george.vcf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
 
 // Animations
 window.addEventListener('load', () => {
@@ -358,6 +387,7 @@ window.addEventListener('load', () => {
     }, 7000);
   }, 1700);
 });
+
 </script>
 
 </body>
