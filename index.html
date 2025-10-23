@@ -89,7 +89,15 @@ ul#file-list li{display:flex;align-items:center;gap:12px;background:linear-gradi
 ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8,23,0.12)}
 .file-icon{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#5aa0ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex:0 0 44px}
 .file-meta{flex:1;display:flex;flex-direction:column}
-.file-meta a{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
 .file-meta .muted{color:var(--muted);font-size:.88rem;margin-top:6px}
 
 /* SPLASH SCREEN */
@@ -203,6 +211,68 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
   margin-top: 8px;
 }
 
+/* TILES FOR FOLDERS */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 8px;
+}
+
+.tile-grid .tile {
+  background: linear-gradient(180deg, #fbfdff, #f4f7fb);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(2,8,23,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.tile-grid .tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(2,8,23,0.18);
+}
+
+.tile .file-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #5aa0ff);
+  color: white;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.tile .file-meta {
+  max-width: 100%;
+}
+
+.tile .file-meta a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tile {
+  ...
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.tile .file-meta .muted {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
 
 </style>
 </head>
@@ -231,12 +301,21 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
 
 <main class="container">
   <section class="hero">
-    <h1>Latest Files</h1>
+    <h1>My latest CV</h1>
   </section>
   <article class="files-card">
-    <ul id="file-list"></ul>
+    <div id="file-list" class="tile-grid"></div>
   </article>
+ 
+ <section class="hero">
+  <h1>Accessible versions of my CV</h1>
+</section>
+<article class="files-card">
+  <div id="cv-file-list" class="tile-grid"></div>
+</article>
+
 </main>
+
 
 <!-- SPLASH -->
 <div id="splash">
@@ -278,23 +357,53 @@ fetch(url)
     listEl.innerHTML = '';
     if (data.files && data.files.length > 0) {
       data.files.forEach(file => {
-        const li = document.createElement('li');
+        const tile = document.createElement('div');
         const ext = (file.name.split('.').pop() || '').slice(0,3).toUpperCase();
-        li.innerHTML = `
+        tile.innerHTML = `
           <div class="file-icon">${ext}</div>
           <div class="file-meta">
             <a href="${file.webViewLink}" target="_blank">${file.name}</a>
             <div class="muted">${new Date(file.modifiedTime).toLocaleString()}</div>
           </div>`;
-        listEl.appendChild(li);
+        listEl.appendChild(tile);
       });
     } else {
-      listEl.innerHTML = '<li>No files found.</li>';
+      listEl.innerHTML = '<li>No files found, or there may be an error on the server.</li>';
     }
   })
   .catch(err => {
     console.error(err);
     listEl.innerHTML = '<li style="padding:18px;color:#fff;background:#ff8c8c;border-radius:8px;">Error loading files. Please contact Stephan.</li>';
+  });
+// fetch accessible versions from Drive
+const cvFolderId = '1SVRFbnCN57ul4FaK25B6avV2upR1NFRH';
+const cvQuery = encodeURIComponent(`'${cvFolderId}' in parents and trashed = false`);
+const cvUrl = `https://www.googleapis.com/drive/v3/files?q=${cvQuery}&key=${apiKey}&fields=files(id,name,webViewLink,modifiedTime)`;
+const cvListEl = document.getElementById('cv-file-list');
+
+fetch(cvUrl)
+  .then(r => r.json())
+  .then(data => {
+    cvListEl.innerHTML = '';
+    if (data.files && data.files.length > 0) {
+      data.files.forEach(file => {
+        const tile = document.createElement('div');
+        const ext = (file.name.split('.').pop() || '').slice(0,3).toUpperCase();
+        tile.innerHTML = `
+          <div class="file-icon">${ext}</div>
+          <div class="file-meta">
+            <a href="${file.webViewLink}" target="_blank">${file.name}</a>
+            <div class="muted">${new Date(file.modifiedTime).toLocaleString()}</div>
+          </div>`;
+        cvListEl.appendChild(tile);
+      });
+    } else {
+      cvListEl.innerHTML = '<li>No files found, or there may be an error on the server.</li>';
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    cvListEl.innerHTML = '<li style="padding:18px;color:#fff;background:#ff8c8c;border-radius:8px;">Error loading CV files. Please contact Stephan.</li>';
   });
 
 // Modal logic
@@ -324,7 +433,8 @@ document.getElementById('callBtn').addEventListener('click', () => {
 document.getElementById('emailBtn').addEventListener('click', () => {
   window.location.href = 'mailto:stephanvgeorge@gmail.com';
 });
-// create vcf
+
+// CREATE VCF
 document.getElementById('vcfBtn').addEventListener('click', () => {
   const vcfData = `
 BEGIN:VCARD
@@ -392,6 +502,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
