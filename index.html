@@ -132,7 +132,12 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
   text-align: center;
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.modal.open .modal-box:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 120, 215, 0.35);
 }
 
 .modal.open .modal-box {
@@ -160,7 +165,14 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
   border: 0;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 120, 215, 0.25);
+}
+
 
 /* BUTTON STYLES */
 .btn.call {
@@ -220,7 +232,6 @@ ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8
 <main class="container">
   <section class="hero">
     <h1>Latest Files</h1>
-    <div class="small-muted">Shared folder: Google Drive</div>
   </section>
   <article class="files-card">
     <ul id="file-list"></ul>
