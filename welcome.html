@@ -1,139 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CV Folder Viewer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Stephan George — Welcome</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-image: url('office.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  color: #0b1220;
+  background-color: LightBlue; /* fallback incase picture doesn't load */
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #0078D7;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 6px;
-      margin-bottom: 30px;
-    }
+@media (max-width: 768px) {
+  html, body {
+    background-attachment: scroll;
+  }
+}
+body {
+  min-height: 100vh;
+}
 
-    .welcome {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
 
-    .contact-button {
-      background-color: white;
-      color: #0078D7;
-      padding: 8px 14px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
+:root{
+  --accent:#0078D7;
+  --accent2:#1f6feb;
+  --muted:#6b7280;
+  --card-bg:#ffffffee;
+  --max-width:920px;
+}
 
-    .contact-button:hover {
-      background-color: #e6e6e6;
-    }
+/* HEADER */
+header.app-header{
+  position:fixed;top:0;left:0;right:0;height:72px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(2,6,23,0.45);
+  z-index:1000;padding:0 18px;
+  opacity:0;transform:translateY(-10px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+header.app-header.visible{opacity:1;transform:none;}
+.header-inner{max-width:var(--max-width);width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;color:white;text-decoration:none;user-select:none}
+.logo{
+  width:46px;height:46px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:white;font-family:monospace;
+  box-shadow:0 4px 10px rgba(0,0,0,0.25) inset;
+}
+.brand .text .name{font-weight:700;font-size:1.05rem}
+.brand .text .welcome{font-size:.82rem;opacity:.95}
 
-    h1 {
-      color: #0078D7;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
+/* CONTACT BUTTON */
+.contact-wrap{display:flex;align-items:center;gap:12px}
+.contact-button{
+  display:inline-flex;align-items:center;gap:10px;
+  background:white;color:var(--accent);
+  padding:10px 14px;border-radius:8px;border:0;cursor:pointer;
+  font-weight:700;box-shadow:0 6px 18px rgba(3,10,27,0.18);
+  opacity:0;transform:translateX(60px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.contact-button.visible{opacity:1;transform:translateX(0);}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.contact-button.attention{animation:pulse 1.4s ease-in-out}
 
-    ul {
-      list-style: none;
-      padding: 20px;
-      margin: 0;
-      border: 2px solid #0078D7;
-      border-radius: 8px;
-      background-color: #fff;
-    }
+/* MAIN CONTENT */
+main.container{max-width:var(--max-width);margin:0 auto;padding:28px 18px 120px;opacity:0;transform:translateY(30px);transition:opacity 1.2s ease,transform 1.2s ease;}
+main.container.visible{opacity:1;transform:none;margin-top:100px;}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}
+.hero h1{margin:0;color:black;font-size:1.6rem;font-weight:700}
+.small-muted{font-size:.9rem;color:var(--muted)}
 
-    li {
-      background-color: #f4f4f4;
-      padding: 12px 16px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      transition: background-color 0.3s ease;
-    }
+.files-card{background:var(--card-bg);border-radius:12px;padding:18px;box-shadow:0 12px 30px rgba(3,10,27,0.35);border:1px solid rgba(7,19,39,0.06)}
+ul#file-list{list-style:none;padding:8px;margin:0;max-height:60vh;overflow:auto}
+ul#file-list li{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#fbfdff,#f4f7fb);border-radius:10px;padding:12px 14px;margin-bottom:10px;transition:transform .14s ease,box-shadow .14s ease}
+ul#file-list li:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,8,23,0.12)}
+.file-icon{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#5aa0ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex:0 0 44px}
+.file-meta{flex:1;display:flex;flex-direction:column}
+.file-meta a{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta .muted{color:var(--muted);font-size:.88rem;margin-top:6px}
 
-    li:hover {
-      background-color: #e0e0e0;
-    }
+/* SPLASH SCREEN */
+#splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:none;color:black;z-index:3000}
+.splash-content{text-align:center}
+.splash-logo{width:80px;height:80px;border-radius:16px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;margin:0 auto 12px}
+.splash-name{font-size:2rem;font-weight:800;letter-spacing:1px}
+.splash-welcome{font-size:1.2rem;opacity:0.9;margin-top:6px}
 
-    a {
-      color: #0078D7;
-      text-decoration: none;
-      font-weight: bold;
-    }
+/* MODAL BACKDROP */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 2000;
+}
 
-    a:hover {
-      text-decoration: underline;
-    }
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
 
-    #file-list:empty::before {
-      content: "Loading files...";
-      display: block;
-      padding: 20px;
-      color: #666;
-      font-style: italic;
-    }
-  </style>
+/* MODAL BOX */
+.modal-box {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 18px 48px rgba(2, 8, 23, 0.5);
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.modal.open .modal-box {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* MODAL CONTENT */
+.modal-box h3 {
+  margin: 0 0 10px 0;
+}
+
+.modal-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* BUTTON STYLES */
+.btn.call {
+  background: linear-gradient(90deg, #10b981, #059669);
+  color: white;
+}
+
+.btn.email {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: white;
+}
+
+.btn.vcf {
+  background: linear-gradient(90deg, #6b7280, #4b5563);
+  color: white;
+}
+
+.btn.close {
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* SMALL TEXT */
+.small-muted {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="welcome">Stephan George — Welcome</div>
-      <a href="mailto:stephanvgeorge@gmail.com" class="contact-button">Contact Me</a>
-    </header>
 
-    <h1>Latest CV Files</h1>
-    <ul id="file-list"></ul>
+<header class="app-header">
+  <div class="header-inner">
+    <a class="brand" href="#">
+      <div class="logo">SG</div>
+      <div class="text">
+        <div class="name">Stephan George</div>
+        <div class="welcome">Welcome</div>
+      </div>
+    </a>
+    <div class="contact-wrap">
+      <button class="contact-button" id="openContact">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8a2 2 0 0 1 2-2h3l2-2h4l2 2h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z" fill="#0078D7" opacity="0.12"></path>
+          <path d="M8 6h8" stroke="#0078D7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Contact Me
+      </button>
+    </div>
   </div>
+</header>
 
-  <script>
-    const folderId = '1lh-BxCiqnhscXOCvBtS5cU0xtkdAakz4';
-    const apiKey = 'AIzaSyDxqmCSIiSGThNrhuI0tnBndVrDo9ZvkoI';
+<main class="container">
+  <section class="hero">
+    <h1>Latest Files</h1>
+    <div class="small-muted">Shared folder: Google Drive</div>
+  </section>
+  <article class="files-card">
+    <ul id="file-list"></ul>
+  </article>
+</main>
 
-    const query = encodeURIComponent(`'${folderId}' in parents`);
-    const url = `https://www.googleapis.com/drive/v3/files?q=${query}&key=${apiKey}&fields=files(id,name,webViewLink)`;
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-content">
+    <div class="splash-logo">SG</div>
+    <div class="splash-name">Stephan George</div>
+    <div class="splash-welcome">Welcome</div>
+  </div>
+</div>
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const list = document.getElementById('file-list');
-        list.innerHTML = '';
-        if (data.files && data.files.length > 0) {
-          data.files.forEach(file => {
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="${file.webViewLink}" target="_blank">${file.name}</a>`;
-            list.appendChild(li);
-          });
-        } else {
-          list.innerHTML = '<li>No files found in the folder.</li>';
-        }
-      })
-      .catch(error => {
-        const list = document.getElementById('file-list');
-        list.innerHTML = `
-          <li>
-            The latest files were unable to load correctly.
-            Please <a href="mailto:stephanvgeorge@gmail.com">contact Stephan</a>.
-          </li>
-        `;
-        console.error('Drive API error:', error);
+<!-- Modal -->
+  <div id="contactModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" tabindex="-1">
+    <div class="modal-box" role="document">
+      <h3 id="contactTitle">Contact Me</h3>
+      <p class="small-muted">Choose how you'd like to get in touch</p>
+
+      <div class="modal-actions">
+        <button class="btn call" id="callBtn" aria-label="Call Stephan">📞 Call Stephan — 07983 669900</button>
+        <button class="btn email" id="emailBtn" aria-label="Email Stephan">📧 Email Stephan — stephanvgeorge@gmail.com</button>
+        <button class="btn vcf" id="vcfBtn" aria-label="Download vCard">📇 Download Contact (VCF)</button>
+        <button class="btn close" id="closeBtn" aria-label="Close contact dialog">Close</button>
+      </div>
+      <div class="small-muted">Phone will use your device's dialer where supported. Email opens your default mail client.</div>
+    </div>
+  </div>
+  
+<script>
+// Fetch Drive files
+const folderId = '1lh-BxCiqnhscXOCvBtS5cU0xtkdAakz4';
+const apiKey = 'AIzaSyDxqmCSIiSGThNrhuI0tnBndVrDo9ZvkoI';
+const listEl = document.getElementById('file-list');
+
+const query = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+const url = `https://www.googleapis.com/drive/v3/files?q=${query}&key=${apiKey}&fields=files(id,name,webViewLink,modifiedTime)`;
+
+fetch(url)
+  .then(r => r.json())
+  .then(data => {
+    listEl.innerHTML = '';
+    if (data.files && data.files.length > 0) {
+      data.files.forEach(file => {
+        const li = document.createElement('li');
+        const ext = (file.name.split('.').pop() || '').slice(0,3).toUpperCase();
+        li.innerHTML = `
+          <div class="file-icon">${ext}</div>
+          <div class="file-meta">
+            <a href="${file.webViewLink}" target="_blank">${file.name}</a>
+            <div class="muted">${new Date(file.modifiedTime).toLocaleString()}</div>
+          </div>`;
+        listEl.appendChild(li);
       });
-  </script>
+    } else {
+      listEl.innerHTML = '<li>No files found.</li>';
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    listEl.innerHTML = '<li style="padding:18px;color:#fff;background:#ff8c8c;border-radius:8px;">Error loading files. Please contact Stephan.</li>';
+  });
+
+// Modal logic
+const contactBtn = document.getElementById('openContact');
+const modal = document.getElementById('contactModal');
+const closeBtn = document.getElementById('closeBtn');
+
+contactBtn.addEventListener('click', () => {
+  modal.classList.add('open');
+});
+
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('open');
+});
+
+// Optional: close modal when clicking outside the box
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.remove('open');
+  }
+});
+
+
+// Animations
+window.addEventListener('load', () => {
+  const splash = document.getElementById('splash');
+  if (!splash) return; // safety check
+  const splashLogo = splash.querySelector('.splash-logo');
+  const splashName = splash.querySelector('.splash-name');
+  const splashWelcome = splash.querySelector('.splash-welcome');
+  const header = document.querySelector('header.app-header');
+  const headerLogo = header.querySelector('.logo');
+  const main = document.querySelector('main.container');
+  const contact = document.getElementById('openContact');
+
+  const start = splashLogo.getBoundingClientRect();
+  const end = headerLogo.getBoundingClientRect();
+  const dx = end.left - start.left;
+  const dy = end.top - start.top;
+  const scale = end.width / start.width;
+
+  [splashLogo, splashName, splashWelcome].forEach(el => {
+    el.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0 }
+    ], { duration: 1600, easing: 'ease-in-out', fill: 'forwards' });
+  });
+
+  setTimeout(() => {
+    splash.style.transition = 'opacity .4s ease';
+    splash.style.opacity = '0';
+    setTimeout(() => splash.remove(), 500);
+
+    header.classList.add('visible');
+    setTimeout(() => contact.classList.add('visible'), 1000);
+    setTimeout(() => main.classList.add('visible'), 500);
+
+    setTimeout(() => {
+      contact.classList.add('attention');
+      setTimeout(() => contact.classList.remove('attention'), 1800);
+    }, 7000);
+  }, 1700);
+});
+</script>
+
 </body>
 </html>
