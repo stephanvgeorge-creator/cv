@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CV Folder Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0078D7;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 30px;
+    }
+
+    .welcome {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .contact-button {
+      background-color: white;
+      color: #0078D7;
+      padding: 8px 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .contact-button:hover {
+      background-color: #e6e6e6;
+    }
+
+    h1 {
+      color: #0078D7;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 20px;
+      margin: 0;
+      border: 2px solid #0078D7;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    li {
+      background-color: #f4f4f4;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    li:hover {
+      background-color: #e0e0e0;
+    }
+
+    a {
+      color: #0078D7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #file-list:empty::before {
+      content: "Loading files...";
+      display: block;
+      padding: 20px;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="welcome">Stephan George — Welcome</div>
+      <a href="mailto:stephanvgeorge@gmail.com" class="contact-button">Contact Me</a>
+    </header>
+
+    <h1>Latest CV Files</h1>
+    <ul id="file-list"></ul>
+  </div>
+
+  <script>
+    const folderId = '1lh-BxCiqnhscXOCvBtS5cU0xtkdAakz4';
+    const apiKey = 'AIzaSyDxqmCSIiSGThNrhuI0tnBndVrDo9ZvkoI';
+
+    const query = encodeURIComponent(`'${folderId}' in parents`);
+    const url = `https://www.googleapis.com/drive/v3/files?q=${query}&key=${apiKey}&fields=files(id,name,webViewLink)`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById('file-list');
+        list.innerHTML = '';
+        if (data.files && data.files.length > 0) {
+          data.files.forEach(file => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${file.webViewLink}" target="_blank">${file.name}</a>`;
+            list.appendChild(li);
+          });
+        } else {
+          list.innerHTML = '<li>No files found in the folder.</li>';
+        }
+      })
+      .catch(error => {
+        const list = document.getElementById('file-list');
+        list.innerHTML = `
+          <li>
+            The latest files were unable to load correctly.
+            Please <a href="mailto:stephanvgeorge@gmail.com">contact Stephan</a>.
+          </li>
+        `;
+        console.error('Drive API error:', error);
+      });
+  </script>
+</body>
+</html>
